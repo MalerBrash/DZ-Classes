@@ -1,5 +1,7 @@
 from collections import defaultdict
 import weakref
+
+
 class Student:
     __refs__ = defaultdict(list)
 
@@ -31,6 +33,7 @@ class Student:
             if inst is not None:
                 yield inst
 
+
     def creat_average(self, course=None):        
         all_grades = []
         if course == None:
@@ -52,9 +55,9 @@ class Student:
     
     def differ_aver_grades(self, over):
         if isinstance(over, Student):
-            if self.creat_average() < over.creat_average():
+            if self.__lt__(over):
                 print('Средняя оценка у студента', over.name, over.surname, 'круче, чем у студента', self.name, self.surname) 
-            elif self.creat_average() == over.creat_average():
+            elif self.__eq__(over):
                 print('Средняя оценка у студента', over.name, over.surname, 'на равных со студентом', self.name, self.surname)
             else:
                 print('Средняя оценка у студента', over.name, over.surname, 'хуже, чем у студента', self.name, self.surname)
@@ -67,8 +70,22 @@ class Student:
           return f"Имя:{self.name}\nФамилия:{self.surname}\nСредняя оценка за домашние задания:{self.creat_average()}\nКурсы в процессе изучения:{', '.join(self.courses_in_progress)}\nЗавершенные курсы:{', '.join(self.finished_courses)}"
       except:
           return f"У данного студента пока нет оценок!"
-      
+    
+
+    def __lt__(self, over):        
+        if self.creat_average() < over.creat_average():
+            return True 
+        else:
+            return False
+
+
+    def __eq__(self, over):        
+        if self.creat_average() == over.creat_average():
+            return True 
+        else:
+            return False
         
+
 class Mentor:
     def __init__(self, name, surname):
         self.name = name
@@ -96,6 +113,20 @@ class Lecturer(Mentor):
         except:
             return f"У данного лектора пока нет оценок!"
     
+
+    def __lt__(self, over):        
+        if self.creat_average() < over.creat_average():
+            return True 
+        else:
+            return False
+
+
+    def __eq__(self, over):        
+        if self.creat_average() == over.creat_average():
+            return True 
+        else:
+            return False
+
 
     @classmethod
     def get_instances(cls):
@@ -126,14 +157,15 @@ class Lecturer(Mentor):
     
     def differ_aver_grades(self, over):
         if isinstance(over, Lecturer):
-            if self.creat_average() < over.creat_average():
+            if self.__lt__(over):
                 print('Средняя оценка у лектора', over.name, over.surname, 'круче, чем у лектора', self.name, self.surname) 
-            elif self.creat_average() == over.creat_average():
+            elif self.__eq__(over):
                 print('Средняя оценка у лектора', over.name, over.surname, 'на равных с лектором', self.name, self.surname)
             else:
                 print('Средняя оценка у лектора', over.name, over.surname, 'хуже, чем у лектора', self.name, self.surname)
         else:
             print(over.name, over.surname,'не экземпляр класса Лектор')
+
 
 class Reviewer(Mentor):
     def rate_hw(self, student, course, grade):
@@ -204,7 +236,6 @@ bad_student.grade_lec(middle_lecturer, 'JAVA', 1)
 bad_student.grade_lec(middle_lecturer, 'JAVA', 3)
 bad_student.grade_lec(middle_lecturer, 'JAVA', 5)
 
-
 # print(cool_lecturer.grades)
 # print(cool_reviewer.courses_attached)
 print(best_student)
@@ -217,10 +248,11 @@ print(middle_lecturer)
 bad_student.differ_aver_grades(best_student)
 cool_lecturer.differ_aver_grades(middle_lecturer)
 
-
-
 List_students = ['John Wayne', 'Clint Eastwood']
 List_lecturers = ['Ruoy Eman', 'Andrey Kalugin']
 
 get_all_st_average(List_students, 'JAVA')  
 get_all_lec_average(List_lecturers, 'JAVA')
+
+print(middle_lecturer < cool_lecturer)
+print(bad_student < best_student)
